@@ -10,7 +10,7 @@
     "test": "npx hardhat test",
     "lint": "prettier ./test/**/*.ts --check",
     "prepublishOnly": "yarn test",
-    "fujitime": "npx hardhat run scripts/deploy.js --network fuji"
+    "fujitime01": "npx hardhat run scripts/deploy01.js --network fuji"
   },
   "repository": {
     "type": "git",

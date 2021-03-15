@@ -39,6 +39,10 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
+  // Getting the Wallet
+  //walletPrivateKey = new hre.ethers.Wallet(process.env.FUJI_PRIVATE_KEY);
+  // TODO: Implement Wallet so I can transfer with Multisig or just wait until I can figure out Gnosis Safe.
+
   // Creating the Token
   const CoinToken = await hre.ethers.getContractFactory("CoinToken");
   const coinToken = await CoinToken.deploy("Crypt","RIP","18","10000000",process.env.FUJI_MULTISIG); 
@@ -50,12 +54,12 @@ async function main() {
   const airdrop = await Airdrop.deploy(coinToken.address,process.env.FUJI_MULTISIG,process.env.FUJI_MULTISIG)
   await airdrop.deployed();
   console.log("Airdrop deployed to:", airdrop.address);
+  
+  // Transferring 500,000 RIP to the Airdrop address
+  //coinToken.transfer(airdrop.address,500000);
 
   // Whitelisting all the Airdrop recipients before activating the Airdrop
   airdrop.whitelistAddresses(airdropRecipients, 1000);
-
-  // Transferring 500,000 RIP to the Airdrop address
-  //coinToken.transfer(airdrop.address,500000);
 
 
 }
