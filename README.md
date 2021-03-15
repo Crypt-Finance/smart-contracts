@@ -1,7 +1,8 @@
-# smart-contracts
+# Smart Contracts
 All of the Crypt's smart contracts
 
-Currently we are deploying via Remix, although as we grow we'll need to migrate to Hardhat. 
+## Configuring Hardhat
+You'll need to add your private key to the Fuji network in the `.env` file.
 
 The other thing we need to take into consideration is how we're going to ensure that our contracts are upgradeable.
 

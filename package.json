@@ -4,7 +4,13 @@
   "description": "All of the Crypt's smart contracts",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "precompile": "rimraf ./build/",
+    "compile": "npx hardhat compile",
+    "pretest": "yarn compile",
+    "test": "npx hardhat test",
+    "lint": "prettier ./test/**/*.ts --check",
+    "prepublishOnly": "yarn test",
+    "fujitime": "npx hardhat run scripts/sample-script.js --network fuji"
   },
   "repository": {
     "type": "git",
@@ -24,5 +30,8 @@
     "ethereum-waffle": "^3.3.0",
     "ethers": "^5.0.32",
     "hardhat": "^2.1.1"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0"
   }
 }

@@ -1,5 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ethers");
+require('dotenv').config();
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -56,7 +57,7 @@ module.exports = {
       url: 'https://api.avax-test.network/ext/bc/C/rpc',
       gasPrice: 470000000000,
       chainId: 43113,
-      accounts: []
+      accounts: [process.env.FUJI_PRIVATE_KEY]
     },
     mainnet: {
       url: 'https://api.avax.network/ext/bc/C/rpc',
