@@ -69,7 +69,7 @@ contract Airdrop {
     /**
      * Enable the claiming period and allow user to claim rip. Before activation,
      * this contract must have a rip balance equal to the total airdrop rip
-     * supply of 16.9 million rip. All claimable rip tokens must be whitelisted
+     * supply of 500,000 RIP. All claimable RIP tokens must be whitelisted
      * before claiming is enabled. Only callable by the owner.
      */
     function allowClaiming() external {
@@ -96,8 +96,8 @@ contract Airdrop {
     }
 
     /**
-     * Withdraw your rip. In order to qualify for a withdrawl, the caller's address
-     * must be whitelisted. All rip must be claimed at once. Only the full amount can be
+     * Withdraw your RIP. In order to qualify for a withdrawl, the caller's address
+     * must be whitelisted. All RIP must be claimed at once. Only the full amount can be
      * claimed and only one claim is allowed per user.
      */
     function claim() external {
@@ -114,7 +114,7 @@ contract Airdrop {
     }
 
     /**
-     * Whitelist an address to claim rip. Specify the amount of rip to be allocated.
+     * Whitelist an address to claim RIP. Specify the amount of RIP to be allocated.
      * That address will then be able to claim that amount of rip during the claiming
      * period. The transferrable amount of
      * rip must be nonzero. Total amount allocated must be less than or equal to the

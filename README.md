@@ -34,20 +34,8 @@ I'm going to use [Protofire's Gnosis Safe deploy](https://github.com/protofire/a
 There's currently an issue through the Web UI with Avalanche on Metamask. I'm also having an issue with Protofire's Proxy deploy. I'm busy debugging at the moment.
 
 ### Airdrop
-
-At this stage I can just do this via Metamask
-
 Before we can activate the Airdrop we have to whitelist all the eligible accounts:
 
-So let’s say we want to attract 500 people, that means they all get 1000 RIP tokens which is enough to submit a will. It also means the airdrop will get gobbled up pretty quickly and result in FOMO.
-
-So let’s whitelist the address
-0x63211C6D25Be6ce9b9e058Bd47A70e45A20498ba,  
-
-Now we’re ready to activate the Airdrop!
-
-Click the magic button!
-0x8524a463e51e00fd775066847e2de3a3eeb675b44139277b351330845a7b6dab
 
 Claiming the Airdrop
 
