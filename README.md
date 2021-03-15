@@ -20,12 +20,6 @@ We'll need to separate our contracts into:
 
 
 ## FUJI
-### Create Token
-Deploy Token on Remix with the following parameters:
-```
-The Crypt,RIP,18,10000000,0x63211C6D25Be6ce9b9e058Bd47A70e45A20498ba
-```
-
 Some interesting aspects here are that I've left in two important pieces:
 * Minting
 * Burning
@@ -40,13 +34,6 @@ I'm going to use [Protofire's Gnosis Safe deploy](https://github.com/protofire/a
 There's currently an issue through the Web UI with Avalanche on Metamask. I'm also having an issue with Protofire's Proxy deploy. I'm busy debugging at the moment.
 
 ### Airdrop
-When deploying the contract, we need to add some details
-```
-0x3D0649a8764320649B907cda39242794670653b1,0x63211C6D25Be6ce9b9e058Bd47A70e45A20498ba,0x63211C6D25Be6ce9b9e058Bd47A70e45A20498ba
-```
-
-Before we can activate the Airdrop we have to transfer 500,000 RIP to the Contract address of the Airdrop
-0x2afBCE6259A249668136765acc95b0f97845791e
 
 At this stage I can just do this via Metamask
 

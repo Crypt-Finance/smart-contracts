@@ -4,6 +4,7 @@
 // When running the script with `hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
+require('dotenv').config();
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -13,15 +14,20 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  // Creating the Token
+  const CoinToken = await hre.ethers.getContractFactory("CoinToken");
+  const coinToken = await CoinToken.deploy("Crypt","RIP","18","10000000",process.env.FUJI_MULTISIG); 
+  await coinToken.deployed();
+  console.log("Token deployed to:", coinToken.address);
 
-  await greeter.deployed();
 
-  console.log("Greeter deployed to:", greeter.address);
-  let howsit = await greeter.greet();
-  console.log(howsit);
+  const Airdrop = await hre.ethers.getContractFactory("Airdrop");
+  const airdrop = await Airdrop.deploy(coinToken.address,process.env.FUJI_MULTISIG,process.env.FUJI_MULTISIG)
+  await airdrop.deployed();
+  console.log("Airdrop deployed to:", airdrop.address);
+  // TODO: Transferring 500,000 RIP to the Airdrop address
+  //await token.transfer();
+
 
 }
 
