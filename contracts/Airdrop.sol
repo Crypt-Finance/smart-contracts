@@ -1,55 +1,43 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.0;
-
 /**
- *  Contract for administering the Airdrop of DEATH to CAKE holders.
- *  500,000 DEATH will be made available in the airdrop. After the
- *  Airdrop period is over, all unclaimed DEATH will be transferred to the
- *  community treasury.
+ *  Contract for administering the Airdrop of RIP.
+ *  500,000 RIP will be made available via the Airdrop.
  */
 contract Airdrop {
     // token addresses
-    address public death;
-    address public bnb;
-    address public cake;
-
+    address public rip;
     address public owner;
     address public remainderDestination;
 
-    // amount of DEATH to transfer
+    // amount of RIP to transfer
     mapping (address => uint96) public withdrawAmount;
 
     uint public totalAllocated;
 
     bool public claimingAllowed;
     
-    // Giving away 500,000 DEATH
+    // Giving away 500,000 rip
     uint constant public TOTAL_AIRDROP_SUPPLY = 500_000e18;
 
     // Events
     event ClaimingAllowed();
     event ClaimingOver();
-    event DeathClaimed(address claimer, uint amount);
+    event RipClaimed(address claimer, uint amount);
 
     /**
      * Initializes the contract. Sets token addresses, owner, and leftover token
      * destination. Claiming period is not enabled.
      *
-     * @param death_ the DEATH token contract address
-     * @param bnb_ the BNB token contract address
-     * @param cake_ the CAKE token contract address
+     * @param rip_ the rip token contract address
      * @param owner_ the privileged contract owner
-     * @param remainderDestination_ address to transfer remaining DEATH to when
+     * @param remainderDestination_ address to transfer remaining rip to when
      *     claiming ends. Should be community treasury.
      */
-    constructor(address death_,
-                address bnb_,
-                address cake_,
+    constructor(address rip_,
                 address owner_,
                 address remainderDestination_) {
-        death = death_;
-        bnb = bnb_;
-        cake = cake_;
+        rip = rip_;
         owner = owner_;
         remainderDestination = remainderDestination_;
         claimingAllowed = false;
@@ -57,10 +45,10 @@ contract Airdrop {
     }
 
     /**
-     * Changes the address that receives the remaining DEATH at the end of the
+     * Changes the address that receives the remaining rip at the end of the
      * claiming period. Can only be set by the contract owner.
      *
-     * @param remainderDestination_ address to transfer remaining DEATH to when
+     * @param remainderDestination_ address to transfer remaining rip to when
      *     claiming ends.
      */
     function setRemainderDestination(address remainderDestination_) external {
@@ -79,20 +67,20 @@ contract Airdrop {
     }
 
     /**
-     * Enable the claiming period and allow user to claim DEATH. Before activation,
-     * this contract must have a DEATH balance equal to the total airdrop DEATH
-     * supply of 16.9 million DEATH. All claimable DEATH tokens must be whitelisted
+     * Enable the claiming period and allow user to claim rip. Before activation,
+     * this contract must have a rip balance equal to the total airdrop rip
+     * supply of 16.9 million rip. All claimable rip tokens must be whitelisted
      * before claiming is enabled. Only callable by the owner.
      */
     function allowClaiming() external {
-        require(IDEATH(death).balanceOf(address(this)) >= TOTAL_AIRDROP_SUPPLY, 'Airdrop::allowClaiming: incorrect DEATH supply');
+        require(IRIP(rip).balanceOf(address(this)) >= TOTAL_AIRDROP_SUPPLY, 'Airdrop::allowClaiming: incorrect rip supply');
         require(msg.sender == owner, 'Airdrop::allowClaiming: unauthorized');
         claimingAllowed = true;
         emit ClaimingAllowed();
     }
 
     /**
-     * End the claiming period. All unclaimed DEATH will be transferred to the address
+     * End the claiming period. All unclaimed rip will be transferred to the address
      * specified by remainderDestination. Can only be called by the owner.
      */
     function endClaiming() external {
@@ -103,80 +91,67 @@ contract Airdrop {
         emit ClaimingOver();
 
         // Transfer remainder
-        uint amount = IDEATH(death).balanceOf(address(this));
-        require(IDEATH(death).transfer(remainderDestination, amount), 'Airdrop::endClaiming: Transfer failed');
+        uint amount = IRIP(rip).balanceOf(address(this));
+        require(IRIP(rip).transfer(remainderDestination, amount), 'Airdrop::endClaiming: Transfer failed');
     }
 
     /**
-     * Withdraw your DEATH. In order to qualify for a withdrawl, the caller's address
-     * must be whitelisted. In addition, the calling address must have one whole BNB
-     * or CAKE token. All DEATH must be claimed at once. Only the full amount can be
+     * Withdraw your rip. In order to qualify for a withdrawl, the caller's address
+     * must be whitelisted. All rip must be claimed at once. Only the full amount can be
      * claimed and only one claim is allowed per user.
      */
     function claim() external {
         // tradeoff: if you only transfer one but you held both, you can't claim
         require(claimingAllowed, 'Airdrop::claim: Claiming is not allowed');
-        require(withdrawAmount[msg.sender] > 0, 'Airdrop::claim: No DEATH to claim');
-
-        uint oneToken = 1e18;
-        require(IBnb(bnb).balanceOf(msg.sender) >= oneToken || ICake(cake).balanceOf(msg.sender) >= oneToken,
-            'Airdrop::claim: Insufficient BNB or CAKE balance');
+        require(withdrawAmount[msg.sender] > 0, 'Airdrop::claim: No rip to claim');
 
         uint amountToClaim = withdrawAmount[msg.sender];
         withdrawAmount[msg.sender] = 0;
 
-        emit DeathClaimed(msg.sender, amountToClaim);
+        emit RipClaimed(msg.sender, amountToClaim);
 
-        require(IDEATH(death).transfer(msg.sender, amountToClaim), 'Airdrop::claim: Transfer failed');
+        require(IRIP(rip).transfer(msg.sender, amountToClaim), 'Airdrop::claim: Transfer failed');
     }
 
     /**
-     * Whitelist an address to claim DEATH. Specify the amount of DEATH to be allocated.
-     * That address will then be able to claim that amount of DEATH during the claiming
-     * period if it has sufficient BNB and CAKE balance. The transferrable amount of
-     * DEATH must be nonzero. Total amount allocated must be less than or equal to the
+     * Whitelist an address to claim rip. Specify the amount of rip to be allocated.
+     * That address will then be able to claim that amount of rip during the claiming
+     * period. The transferrable amount of
+     * rip must be nonzero. Total amount allocated must be less than or equal to the
      * total airdrop supply. Whitelisting must occur before the claiming period is
      * enabled. Addresses may only be added one time. Only called by the owner.
      *
-     * @param addr address that may claim DEATH
-     * @param deathOut the amount of DEATH that addr may withdraw
+     * @param addr address that may claim rip
+     * @param ripOut the amount of rip that addr may withdraw
      */
-    function whitelistAddress(address addr, uint96 deathOut) public {
+    function whitelistAddress(address addr, uint96 ripOut) public {
         require(msg.sender == owner, 'Airdrop::whitelistAddress: unauthorized');
         require(!claimingAllowed, 'Airdrop::whitelistAddress: claiming in session');
-        require(deathOut > 0, 'Airdrop::whitelistAddress: No DEATH to allocated');
+        require(ripOut > 0, 'Airdrop::whitelistAddress: No rip to allocated');
         require(withdrawAmount[addr] == 0, 'Airdrop::whitelistAddress: address already added');
 
-        withdrawAmount[addr] = deathOut;
+        withdrawAmount[addr] = ripOut;
 
-        totalAllocated = totalAllocated + deathOut;
-        require(totalAllocated <= TOTAL_AIRDROP_SUPPLY, 'Airdrop::whitelistAddress: Exceeds DEATH allocation');
+        totalAllocated = totalAllocated + ripOut;
+        require(totalAllocated <= TOTAL_AIRDROP_SUPPLY, 'Airdrop::whitelistAddress: Exceeds rip allocation');
     }
 
     /**
      * Whitelist multiple addresses in one call. Wrapper around whitelistAddress.
      * All parameters are arrays. Each array must be the same length. Each index
-     * corresponds to one (address, death) tuple. Only callable by the owner.
+     * corresponds to one (address, rip) tuple. Only callable by the owner.
      */
-    function whitelistAddresses(address[] memory addrs, uint96[] memory deathOuts) external {
+    function whitelistAddresses(address[] memory addrs, uint96[] memory ripOuts) external {
         require(msg.sender == owner, 'Airdrop::whitelistAddresses: unauthorized');
-        require(addrs.length == deathOuts.length,
+        require(addrs.length == ripOuts.length,
                 'Airdrop::whitelistAddresses: incorrect array length');
         for (uint i = 0; i < addrs.length; i++) {
-            whitelistAddress(addrs[i], deathOuts[i]);
+            whitelistAddress(addrs[i], ripOuts[i]);
         }
     }
 }
 
-interface IDEATH {
+interface IRIP {
     function balanceOf(address account) external view returns (uint);
     function transfer(address dst, uint rawAmount) external returns (bool);
-}
-
-interface IBnb {
-    function balanceOf(address account) external view returns (uint);
-}
-
-interface ICake {
-    function balanceOf(address account) external view returns (uint);
 }
