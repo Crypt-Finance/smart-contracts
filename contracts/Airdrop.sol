@@ -141,12 +141,10 @@ contract Airdrop {
      * All parameters are arrays. Each array must be the same length. Each index
      * corresponds to one (address, rip) tuple. Only callable by the owner.
      */
-    function whitelistAddresses(address[] memory addrs, uint96[] memory ripOuts) external {
+    function whitelistAddresses(address[] memory addrs, uint96 ripOut) external {
         require(msg.sender == owner, 'Airdrop::whitelistAddresses: unauthorized');
-        require(addrs.length == ripOuts.length,
-                'Airdrop::whitelistAddresses: incorrect array length');
         for (uint i = 0; i < addrs.length; i++) {
-            whitelistAddress(addrs[i], ripOuts[i]);
+            whitelistAddress(addrs[i], ripOut);
         }
     }
 }
