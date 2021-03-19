@@ -103,7 +103,6 @@ contract Airdrop {
     function claim() external {
         // tradeoff: if you only transfer one but you held both, you can't claim
         require(claimingAllowed, 'Airdrop::claim: Claiming is not allowed');
-        require(withdrawAmount[msg.sender] > 0, 'Airdrop::claim: No rip to claim');
 
         uint amountToClaim = withdrawAmount[msg.sender];
         withdrawAmount[msg.sender] = 0;
